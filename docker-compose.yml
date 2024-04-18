@@ -71,4 +71,16 @@ services:
       - CONNECTION_API_PORT=6000
     ports:
       - "6000:6000"
+  
+  lps:
+    image: lps
+    build:
+      context: .
+      dockerfile: lps/Dockerfile.lps
+    depends_on:
+      - su-broker
+    environment:
+      - LPS_API_PORT=6001
+    ports:
+      - "6001:6001"
 
