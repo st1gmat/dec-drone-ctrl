@@ -1,38 +1,6 @@
 version: '3.4'
 
 services:
-  # zookeeper:
-  #   restart: always
-  #   image: docker.io/bitnami/zookeeper:3.8
-  #   ports:
-  #     - "2181:2181"
-  #   volumes:
-  #     - "zookeeper-volume:/bitnami"
-  #   environment:
-  #     - ALLOW_ANONYMOUS_LOGIN=yes
-  
-  # kafka:
-  #   restart: always
-  #   image: docker.io/bitnami/kafka:3.3
-  #   ports:
-  #     - "9093:9093"
-  #   volumes:
-  #     - "kafka-volume:/bitnami"
-  #   environment:
-  #     - KAFKA_BROKER_ID=1
-  #     - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-  #     - ALLOW_PLAINTEXT_LISTENER=yes
-  #     - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
-  #     - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
-  #     - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://localhost:9093
-  #     - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
-  #   depends_on:
-  #     - zookeeper
-
-  # volumes:
-  #   kafka-volume:
-  #   zookeeper-volume:
-
   su-zookeeper:
     image: confluentinc/cp-zookeeper:7.2.0
     container_name: su-zookeeper
@@ -46,8 +14,6 @@ services:
     container_name: su-broker
     restart: always
     ports:
-    # To learn about configuring Kafka for access across networks see
-    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
       - "9192:9192"
     depends_on:
       - su-zookeeper
@@ -83,4 +49,12 @@ services:
       - LPS_API_PORT=6001
     ports:
       - "6001:6001"
+
+  monitor:
+    image: monitor
+    build:
+      context: .
+      dockerfile: monitor/Dockerfile.monitor
+    depends_on:
+      - su-broker
 

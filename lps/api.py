@@ -14,8 +14,8 @@ app = Flask(__name__)             # create an app instance
 
 _requests_queue: multiprocessing.Queue = None
 
-@app.route("/ingest", methods=['POST'])
-def data_ingest():
+@app.route("/main", methods=['GET'])
+def lps_main():
     return "Hello"
 
 def start_rest(requests_queue):
