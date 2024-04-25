@@ -1,0 +1,60 @@
+version: '3.4'
+
+services:
+  su-zookeeper:
+    image: confluentinc/cp-zookeeper:7.2.0
+    container_name: su-zookeeper
+    restart: always
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2183
+      ZOOKEEPER_TICK_TIME: 2000
+
+  su-broker:
+    image: confluentinc/cp-kafka:7.2.0
+    container_name: su-broker
+    restart: always
+    ports:
+      - "9192:9192"
+    depends_on:
+      - su-zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'su-zookeeper:2183'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://su-broker:9192,PLAINTEXT_INTERNAL://su-broker:29192
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+  connection:
+    image: connection
+    build:
+      context: .
+      dockerfile: connection/Dockerfile.connection
+    depends_on:
+      - su-broker
+    environment:
+      - CONNECTION_API_PORT=6000
+    ports:
+      - "6000:6000"
+  
+  lps:
+    image: lps
+    build:
+      context: .
+      dockerfile: lps/Dockerfile.lps
+    depends_on:
+      - su-broker
+    environment:
+      - LPS_API_PORT=6001
+    ports:
+      - "6001:6001"
+
+  monitor:
+    image: monitor
+    build:
+      context: .
+      dockerfile: monitor/Dockerfile.monitor
+    depends_on:
+      - su-broker
+
