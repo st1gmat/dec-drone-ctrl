@@ -1,0 +1,6 @@
+connection/__pycache__/
+lps/__pycache__/
+monitor/__pycache__/
+.env
+.venv
+/myenv

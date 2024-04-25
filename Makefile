@@ -2,11 +2,11 @@ DISPLAY=
 
 # all: clean prepare build run-broker delay30s run delay60s test
 
-# delay30s:
-# 	sleep 30
+delay30s:
+	sleep 30
 
-# delay60s:
-# 	sleep 60
+delay60s:
+	sleep 60
 
 sys-packages:
 	# sudo apt install -y docker-compose
@@ -32,25 +32,24 @@ run-broker:
 run: run-broker
 	docker-compose up -d
 
-# restart:
-# 	docker-compose restart
+stop:
+	docker-compose stop
 
-# stop:
-# 	docker-compose stop
+restart:
+	docker-compose restart
 
-# down:
-# 	docker-compose down
+down:
+	docker-compose down
 
-# logs:
-# 	docker-compose logs -f --tail 100
+logs:
+	docker-compose logs -f --tail 100
 
-# clean:
-# 	docker-compose down; pipenv --rm; rm -f Pipfile*; echo cleanup complete
+clean:
+	docker-compose down; pipenv --rm; rm -f Pipfile*; echo cleanup complete
 
-# check_broker:
-# 	# message broker needs to be reachable by name su-broker - it is expected so in tests
-# 	ping -c 1 su-broker; if [ $$? -eq 0 ]; then echo "broker check ok" ; else echo "please add su-broker to your /etc/hosts" ; fi
+check_broker:
+	# message broker needs to be reachable by name su-broker - it is expected so in tests
+	ping -c 1 su-broker; if [ $$? -eq 0 ]; then echo "broker check ok" ; else echo "please add su-broker to your /etc/hosts" ; fi
 
-
-# test: check_broker
-# 	pipenv run pytest -sv --reruns 5
+test: check_broker
+	pipenv run pytest -sv --reruns 5

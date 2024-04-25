@@ -10,55 +10,10 @@ def check_operation(id, details):
     dst = details['deliver_to']
     operation = details['operation']
 
-    if src == 'data_input' and dst == 'data_processor' \
-        and operation == 'process_new_data':
-        authorized = True
-
-    if src == 'data_processor' and dst == 'data_output' \
-        and operation == 'process_new_events':
-        authorized = True
-
-    if src == 'downloader' and dst == 'manager' \
-            and operation == 'download_done':
-        authorized = True
-    if src == 'manager' and dst == 'downloader' \
-            and operation == 'download_file':
-        authorized = True
-    if src == 'manager' and dst == 'storage' \
-            and operation == 'commit_blob':
-        authorized = True
-    if src == 'manager' and dst == 'verifier' \
-            and operation == 'verification_requested':
-        authorized = True
-    if src == 'verifier' and dst == 'manager' \
-            and operation == 'handle_verification_result':
-        authorized = True
-    if src == 'manager' and dst == 'updater' \
-            and operation == 'proceed_with_update' \
-            and details['verified'] is True:
-        authorized = True
-    if src == 'storage' and dst == 'manager' \
-            and operation == 'blob_committed':
-        authorized = True
-    if src == 'storage' and dst == 'verifier' \
-            and operation == 'blob_committed':
-        authorized = True
-    if src == 'verifier' and dst == 'storage' \
-            and operation == 'get_blob':
-        authorized = True
-    if src == 'verifier' and dst == 'storage' \
-            and operation == 'commit_sealed_blob' \
-            and details['verified'] is True:
-        authorized = True
-    if src == 'storage' and dst == 'verifier' \
-            and operation == 'blob_content':
-        authorized = True
-    if src == 'updater' and dst == 'storage' \
-            and operation == 'get_blob':
-        authorized = True
-    if src == 'storage' and dst == 'updater' \
-            and operation == 'blob_content' and check_payload_seal(details['blob']) is True:
-        authorized = True
+    # if src == 'data_input' and dst == 'data_processor' \ # TODO: Переделать под наши требования
+    #     and operation == 'process_new_data':
+    #     authorized = True
+    
     # kea - Kafka events analyzer - an extra service for internal monitoring,
     # can only communicate with itself
     if src == 'kea' and dst == 'kea' \

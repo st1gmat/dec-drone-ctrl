@@ -29,7 +29,7 @@ def producer_job(_, config, requests_queue: multiprocessing.Queue):
 
     while True:
         event_details = requests_queue.get()
-        event_details['source'] = 'data_input'
+        event_details['source'] = 'lps'
         producer.produce(topic, json.dumps(event_details), event_details['id'],  
             callback=delivery_callback
         )
