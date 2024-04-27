@@ -14,19 +14,19 @@ app = Flask(__name__)             # create an app instance
 
 _requests_queue: multiprocessing.Queue = None
 
-@app.route("/monitor", methods=['GET'])
+@app.route("/connection", methods=['POST'])
 def data_ingest():
     # content = request.json
-
+    content = request.data
     req_id = uuid4().__str__()
 
     try:
         update_details = {
             "id": req_id,
-            "operation": "process_new_data",
-            "new_data": "asdsadsadasdasdsa",            
-            "deliver_to": "monitor"            
-            }
+            "operation": "data_connection",
+            "new_data": content,
+            "deliver_to": "monitor"
+        }
         _requests_queue.put(update_details)
         print(f"new data event: {update_details}")
     except:
