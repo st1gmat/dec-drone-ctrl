@@ -2,17 +2,67 @@ import threading
 from confluent_kafka import Consumer, OFFSET_BEGINNING
 import json
 from producer import proceed_to_deliver
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+drone_id = os.getenv("DRONE_ID", default=0)
+
+def processing_received(new_data: dict, details: dict):
+    # дешифруем 
+    if drone_id in new_data["deliver-to"] or new_data["deliver-to"] == "all":
+        type = new_data['type']
+        if type == "plane_data":
+            details["operation"] = "plane_tasks"
+        if type == "task_data":
+            details["operation"] = "task_data"
+
+def processing_departure(new_data: dict, details: dict):
+    # шифруем 
+    new_data["deliver_from"] = str(drone_id)
+    # тут мы типа шифруем она большая функция да
 
 
-def handle_event(id, details):    
+
+#     "id": req_id,
+#     "operation": "process_new_data",
+#     "new_data": {
+#         "type":"что за данные",
+#         "deliver-from": "",
+#         "deliver-to": "",
+#         "data": { .... }
+#         },
+#     "component_to": "monitor"
+#     }
+
+
+def handle_event(id :str, details: dict):    
     # print(f"[debug] handling event {id}, {details}")
     print(f"[info] handling event {id}, {details['source']}->{details['deliver_to']}: {details['operation']}")
     
-    # TODO:
-    # Он берет JSON смотрит на deliver-to
-    # Берет type
-    # В зависимости от type передает data компоненте в 4(напрямую), в 5ую транзитом, через 4ую
-    # при отправке данных в deliver-from записывает id дрона to be continued...
+    # TODO: сделать остальные компоненты, а то в никуда передается по сути
+    try:
+        if details['operation'] == 'data_processing':
+            new_data = details['new_data']            
+            if details['deliver_from'] == "cooperation_tasks":
+                processing_departure(new_data)
+                details['new_data'] = new_data
+                details['operation'] = 'data_outputting'
+                details['deliver_to'] = 'connection'
+                proceed_to_deliver(id, details)
+
+                
+            if details['deliver_from'] == "connection":
+                processing_received(new_data, details)
+                details['deliver_to'] = 'cooperation'
+                proceed_to_deliver(id, details)
+
+            
+                
+            
+    except Exception as e:
+        print(f"[error] failed to handle request: {e}")
 
 
 

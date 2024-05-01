@@ -4,6 +4,7 @@ from uuid import uuid4
 import os
 from dotenv import load_dotenv
 import threading
+import base64
 
 load_dotenv()
 
@@ -16,11 +17,17 @@ _requests_queue: multiprocessing.Queue = None
 
 @app.route("/connection", methods=['POST'])
 def data_ingest():
-    # content = request.json
-    content = request.data
+    content = request.json
     req_id = uuid4().__str__()
 
     try:
+        # base64_content = base64.b64encode(content).decode('utf-8')
+        # update_details = {
+        #     "id": req_id,
+        #     "operation": "data_connection",
+        #     "new_data": base64_content,
+        #     "deliver_to": "monitor"
+        # }
         update_details = {
             "id": req_id,
             "operation": "data_connection",

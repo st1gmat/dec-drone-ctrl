@@ -1,7 +1,7 @@
 from argparse import ArgumentParser, FileType
 from configparser import ConfigParser
 from producer import start_producer
-from consumer import start_consumer
+from data_processing.data_processing import start_consumer
 from multiprocessing import Queue
 
 if __name__ == "__main__":
