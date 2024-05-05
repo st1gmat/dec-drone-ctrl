@@ -11,11 +11,11 @@ load_dotenv()
 # TODO: обсудить где будет храниться drone_id & drone_key
 drone_id = os.getenv("DRONE_ID", default=0) # предполгается, что для каждого дрона будет запускаться отдельная группа контейнеров
 
-def generate_key():
-    return Fernet.generate_key()
+# def generate_key():
+#     return Fernet.generate_key()
 
 # Генерация ключа
-drone_key = generate_key() # по идеи надо один раз сгенерить его и хранить где-то в env
+drone_key = b'7IPCWoNeeK4XU1rSToEMoB8voT5ip6r8ww1eRtHRkOI=' # по идеи надо один раз сгенерить его и хранить где-то в env
 
 # Функция для шифрования данных
 def encrypt_data(data, key):
@@ -32,9 +32,10 @@ def decrypt_data(encrypted_data, key):
 # Функция для обработки полученных данных
 def processing_received(new_data: bytes, details: dict):
     # Дешифруем данные
-    decrypted_data = decrypt_data(new_data, drone_key)
-    
-    if drone_id in decrypted_data["deliver-to"] or decrypted_data["deliver-to"] == "all":
+    decrypted_data = decrypt_data(new_data['encrypted-data'], drone_key)
+    # print("********")
+    print(decrypted_data)
+    if str(drone_id) in decrypted_data["deliver-to"] or decrypted_data["deliver-to"] == "all":
         type = decrypted_data['type']
         if type == "plane_data":
             details["operation"] = "plane_tasks"
@@ -57,7 +58,7 @@ def handle_event(id :str, details: dict):
     # TODO: сделать остальные компоненты, а то в никуда передается по сути
     try:
         if details['operation'] == 'data_processing':
-            new_data = details['new_data']            
+            new_data = details['new_data']
             if details['deliver_from'] == "cooperation_tasks":
                 new_data = processing_departure(new_data)
                 details['new_data'] = new_data
@@ -70,7 +71,9 @@ def handle_event(id :str, details: dict):
                 new_data = processing_received(new_data, details)
                 details['new_data'] = new_data
                 details['deliver_to'] = 'cooperation'
-                proceed_to_deliver(id, details)     
+                # print('details["deliver_from"] == "connection"\n' + details)
+                print("[debug_flag] ended processing_received \n going to deliver")
+                proceed_to_deliver(id, details)
     except Exception as e:
         print(f"[error] failed to handle request: {e}")
 
@@ -106,8 +109,8 @@ def consumer_job(args, config):
                 try:
                     id = msg.key().decode('utf-8')
                     details_str = msg.value().decode('utf-8')
-                    # print("[debug] consumed event from topic {topic}: key = {key:12} value = {value:12}".format(
-                    #     topic=msg.topic(), key=id, value=details_str))
+                    print("[debug] consumed event from topic {topic}: key = {key:12} value = {value:12}".format(
+                        topic=msg.topic(), key=id, value=details_str))
                     handle_event(id, json.loads(details_str))
                 except Exception as e:
                     print(

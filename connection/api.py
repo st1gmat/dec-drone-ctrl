@@ -30,9 +30,10 @@ def data_ingest():
         # }
         update_details = {
             "id": req_id,
-            "operation": "data_connection",
+            "operation": "data_processing",
             "new_data": content,
-            "deliver_to": "monitor"
+            "deliver_to": "monitor",
+            "deliver_from": "connection"
         }
         _requests_queue.put(update_details)
         print(f"new data event: {update_details}")
