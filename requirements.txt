@@ -2,3 +2,4 @@ confluent-kafka
 configparser
 flask
 python-dotenv
+cryptography
