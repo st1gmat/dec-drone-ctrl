@@ -16,6 +16,14 @@ def check_operation(id, details):
         and operation == 'data_processing':
         authorized = True
     
+    if src == 'data_processing' and dst == 'cooperation_tasks' \
+        and operation == 'task_data':
+        authorized = True
+
+    if src == 'cooperation_tasks' and dst == 'cooperation_plane' \
+        and operation == 'plane_data':
+        authorized = True
+    
     # kea - Kafka events analyzer - an extra service for internal monitoring,
     # can only communicate with itself
     if src == 'kea' and dst == 'kea' \
