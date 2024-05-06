@@ -12,6 +12,9 @@ def check_operation(id, details):
     # if src == 'data_input' and dst == 'data_processor' \ # TODO: Переделать под наши требования
     #     and operation == 'process_new_data':
     #     authorized = True
+    if src == 'connection' and dst == 'data_processing' \
+        and operation == 'data_processing':
+        authorized = True
     
     # kea - Kafka events analyzer - an extra service for internal monitoring,
     # can only communicate with itself
