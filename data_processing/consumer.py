@@ -4,7 +4,8 @@ import json
 from producer import proceed_to_deliver
 import os
 from dotenv import load_dotenv
-from cryptography.fernet import Fernet
+# from cryptography.fernet import Fernet
+import time
 
 load_dotenv()
 
@@ -15,26 +16,27 @@ drone_id = os.getenv("DRONE_ID", default=0) # предполгается, что
 #     return Fernet.generate_key()
 
 # Генерация ключа
-drone_key = b'7IPCWoNeeK4XU1rSToEMoB8voT5ip6r8ww1eRtHRkOI=' # по идеи надо один раз сгенерить его и хранить где-то в env
+# drone_key = b'7IPCWoNeeK4XU1rSToEMoB8voT5ip6r8ww1eRtHRkOI=' # по идеи надо один раз сгенерить его и хранить где-то в env
 
 # Функция для шифрования данных
-def encrypt_data(data, key):
-    cipher_suite = Fernet(key)
-    encrypted_data = cipher_suite.encrypt(json.dumps(data).encode())
-    return encrypted_data
+# def encrypt_data(data, key): # убрать шифрование, оставить комменты
+#     cipher_suite = Fernet(key)
+#     encrypted_data = cipher_suite.encrypt(json.dumps(data).encode())
+#     return encrypted_data
 
-# Функция для дешифрования данных
-def decrypt_data(encrypted_data, key):
-    cipher_suite = Fernet(key)
-    decrypted_data = cipher_suite.decrypt(encrypted_data).decode()
-    return json.loads(decrypted_data)
+# # Функция для дешифрования данных
+# def decrypt_data(encrypted_data, key):
+#     cipher_suite = Fernet(key)
+#     decrypted_data = cipher_suite.decrypt(encrypted_data).decode()
+#     return json.loads(decrypted_data)
 
 # Функция для обработки полученных данных
 def processing_received(new_data: bytes, details: dict):
     # Дешифруем данные
-    decrypted_data = decrypt_data(new_data['encrypted-data'], drone_key)
+    print("Decrypting data....")
+    # decrypted_data = decrypt_data(new_data['encrypted-data'], drone_key)
+    decrypted_data = new_data
     # print("********")
-    print(decrypted_data)
     if str(drone_id) in decrypted_data["deliver-to"] or decrypted_data["deliver-to"] == "all":
         type = decrypted_data['type']
         if type == "plane_data":
@@ -47,8 +49,10 @@ def processing_received(new_data: bytes, details: dict):
 # Функция для обработки отправленных данных
 def processing_departure(new_data: dict, details: dict):
     # Шифруем данные
+    print('Encrypting data...')
     new_data["deliver_from"] = str(drone_id)
-    encrypted_data = encrypt_data(new_data, drone_key)
+    # encrypted_data = encrypt_data(new_data, drone_key)
+    encrypted_data = new_data
     return encrypted_data
 
 def handle_event(id :str, details: dict):    
@@ -59,7 +63,7 @@ def handle_event(id :str, details: dict):
     try:
         if details['operation'] == 'data_processing':
             new_data = details['new_data']
-            if details['deliver_from'] == "cooperation_tasks":
+            if details['source'] == "cooperation_tasks":
                 new_data = processing_departure(new_data)
                 details['new_data'] = new_data
                 details['operation'] = 'data_outputting'
@@ -67,7 +71,7 @@ def handle_event(id :str, details: dict):
                 proceed_to_deliver(id, details)
 
                 
-            if details['deliver_from'] == "connection":
+            if details['source'] == "connection":
                 new_data = processing_received(new_data, details)
                 details['new_data'] = new_data
                 details['deliver_to'] = 'cooperation'

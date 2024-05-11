@@ -32,8 +32,7 @@ def data_ingest():
             "id": req_id,
             "operation": "data_processing",
             "new_data": content,
-            "deliver_to": "monitor",
-            "deliver_from": "connection"
+            "deliver_to": "data_processing"
         }
         _requests_queue.put(update_details)
         print(f"new data event: {update_details}")
