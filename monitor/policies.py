@@ -9,9 +9,6 @@ def check_operation(id, details):
     dst = details['deliver_to']
     operation = details['operation']
 
-    # if src == 'data_input' and dst == 'data_processor' \ # TODO: Переделать под наши требования
-    #     and operation == 'process_new_data':
-    #     authorized = True
     if src == 'connection' and dst == 'data_processing' \
         and operation == 'data_processing':
         authorized = True
@@ -23,12 +20,42 @@ def check_operation(id, details):
     if src == 'cooperation_tasks' and dst == 'cooperation_plane' \
         and operation == 'plane_data':
         authorized = True
-    
-    # kea - Kafka events analyzer - an extra service for internal monitoring,
-    # can only communicate with itself
-    if src == 'kea' and dst == 'kea' \
-            and (operation == 'self_test' or operation == 'test_param'):
+
+    if src == 'cooperation_plane' and dst == 'flight_control' \
+        and operation == 'plane_data':
         authorized = True
+    
+    if src == 'flight_control' and dst == 'emergency_landing' \
+        and operation == 'alert':
+        authorized = True
+    
+    if src == 'flight_control' and dst == 'motor_control' \
+        and operation == 'movement_data':
+        authorized = True
+    
+    if src == 'motor_control' and dst == 'technical_data' \
+        and operation == 'motor_data':
+        authorized = True
+
+    if src == 'battery_control' and dst == 'technical_data' \
+        and operation == 'battery_status':
+        authorized = True
+
+    if src == 'technical_data' and dst == 'flight_control' \
+        and operation == 'data':
+        authorized = True
+
+    if src == 'navigation' and dst == 'flight_control' \
+        and operation == 'location_data':
+        authorized = True 
+
+    if src == 'lps' and dst == 'navigation' \
+        and operation == 'location_data':
+        authorized = True 
+    
+    if src == 'gps' and dst == 'navigation' \
+        and operation == 'location_data':
+        authorized = True 
 
     return authorized
 
