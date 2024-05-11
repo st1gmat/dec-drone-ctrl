@@ -73,7 +73,7 @@ class Table:
         for row in self.data:
             print("\t".join(str(item) for item in row))
 
-headers = ["task_id", "task_priority", ["id", "current_priority"]]
+headers = ["task_id", "task_priority", ["id", "current_priority"]] # можно реализовать проще
 
 headers_id = {"id": "index"}
 
