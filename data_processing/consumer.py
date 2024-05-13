@@ -72,9 +72,12 @@ def handle_event(id :str, details: dict):
 
                 
             if details['source'] == "connection":
-                new_data = processing_received(new_data, details)
+                # new_data = processing_received(new_data, details)
+                
                 details['new_data'] = new_data
-                details['deliver_to'] = 'cooperation'
+                details['deliver_to'] = 'cooperation_tasks'
+                details['operation'] = 'task_data'
+
                 # print('details["deliver_from"] == "connection"\n' + details)
                 print("[debug_flag] ended processing_received \n going to deliver")
                 proceed_to_deliver(id, details)
