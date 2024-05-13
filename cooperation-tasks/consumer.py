@@ -7,7 +7,31 @@ from producer import proceed_to_deliver
 def handle_event(id, details):    
     # print(f"[debug] handling event {id}, {details}")
     print(f"[info] handling event {id}, {details['source']}->{details['deliver_to']}: {details['operation']}")
+    try:
+        if details["source"] == "data_processing":
+            print("Task checked and storaged => plane data sending to cooperation_plane")
+            details["deliver-to"] = "cooperation_plane"
+            details['operation'] = 'plane_data'
+
+            proceed_to_deliver(id, details)
+        if details["source"] == "detector-control":
+            print("Data of detection => this data is sending to data_processing")
+            details["deliver-to"] = "data_processing"
+            details['operation'] = 'detection_data'
+
+            proceed_to_deliver(id, details)
+        if details["source"] == "cooperation_plane":
+            print("Data of coordinates => coordinates is sent to data_processing")
+            details["deliver-to"] = "data_processing"
+            details['operation'] = 'task_data'
+            proceed_to_deliver(id, details)
+    except Exception as e:
+        print(f"[error] failed to handle request: {e}")
+
     
+        
+        
+
 
 
 def consumer_job(args, config):
