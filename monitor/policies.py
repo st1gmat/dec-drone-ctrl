@@ -13,15 +13,35 @@ def check_operation(id, details):
         and operation == 'data_processing':
         authorized = True
     
+    if src == 'data_processing' and dst == 'connection' \
+        and operation == 'data_outputting':
+        authorized = True
+
     if src == 'data_processing' and dst == 'cooperation_tasks' \
-        and operation == 'task_data':
+        and operation == 'three_in_one':
         authorized = True
 
     if src == 'cooperation_tasks' and dst == 'cooperation_plane' \
         and operation == 'plane_data':
         authorized = True
 
+    if src == 'cooperation_tasks' and dst == 'data_processing' \
+        and (operation == 'plane_data' or operation == 'detection_data' or operation == 'task_data'):
+        authorized = True
+
+    if src == 'detector-control' and dst == 'cooperation_tasks' \
+        and operation == 'detection_data':
+        authorized = True
+
+    if src == 'cooperation_tasks' and dst == 'data_processing' \
+        and operation == 'detection_data':
+        authorized = True
+
     if src == 'cooperation_plane' and dst == 'flight_control' \
+        and operation == 'plane_data':
+        authorized = True
+
+    if src == 'cooperation_plane' and dst == 'cooperation_tasks' \
         and operation == 'plane_data':
         authorized = True
     
@@ -30,6 +50,10 @@ def check_operation(id, details):
         authorized = True
     
     if src == 'flight_control' and dst == 'motor_control' \
+        and operation == 'movement_data':
+        authorized = True
+
+    if src == 'flight_control' and dst == 'cooperation_tasks' \
         and operation == 'movement_data':
         authorized = True
     
