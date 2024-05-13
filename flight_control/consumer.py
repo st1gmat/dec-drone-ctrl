@@ -7,7 +7,42 @@ from producer import proceed_to_deliver
 def handle_event(id, details):    
     # print(f"[debug] handling event {id}, {details}")
     print(f"[info] handling event {id}, {details['source']}->{details['deliver_to']}: {details['operation']}")
+    try:
+        if details["source"] == "technical_data":
+            print("Recieving and analyzing techical_data")
+            print("If something is wrong this component calls emergency_landing")
+            
+            # Закомментированное - это негативный сценарий (который не реализуем)
+            # details["deliver-to"] = "emergency_landing"
+            # details['operation'] = 'alert'
+            # proceed_to_deliver(id, details)
+        
+        if details["source"] == "navigation":
+            print("Recieving and analyzing navigation data")
+            print("If something is wrong this component calls emergency_landing")
+            # Закомментированное - это негативный сценарий (который не реализуем)
+            # details["deliver-to"] = "emergency_landing"
+            # details['operation'] = 'alert'
+
+            details["deliver-to"] = "cooperation_plane"
+            details['operation'] = 'movement_data'
+
+            proceed_to_deliver(id, details)
+
+        if details["source"] == "cooperation_plane":
+            print("Processing of plane_data & task_data -> to movement_data, which sends them to motor_control")
+            details["deliver-to"] = "motor_control"
+            details['operation'] = 'movement_data'
+            proceed_to_deliver(id, details)
+
+       
+    except Exception as e:
+        print(f"[error] failed to handle request: {e}")
+
     
+        
+        
+
 
 
 def consumer_job(args, config):
