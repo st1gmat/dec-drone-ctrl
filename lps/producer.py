@@ -3,8 +3,37 @@ import multiprocessing
 import threading
 from confluent_kafka import Producer
 import json
-
+import random
+import time
 _requests_queue: multiprocessing.Queue = None
+
+def lps_data():
+    x = random.uniform(0, 100)
+    y = random.uniform(0, 100)
+    z = random.uniform(0, 100)
+    count = 1
+    while True:
+        if count % 3 == 0:
+            x += random.uniform(1, 10)
+            y += random.uniform(1, 10)
+            z += random.uniform(1, 10)
+        if count % 3 != 0:
+            x -= random.uniform(1, 10)
+            y -= random.uniform(1, 10)
+            z -= random.uniform(1, 10)
+        time.time(3)
+        data = {
+            "data_location": {
+                "x": str(x) , 
+                "y": str(y),
+                "z": str(z),
+            },
+            
+            "deliver-to": "navigation",
+            "operation": "lps_location_data"
+        }
+        proceed_to_deliver(data)
+    
 
 def proceed_to_deliver(id, details):
     # print(f"[debug] queueing for delivery event id: {id}, payload: {details}")    
@@ -43,4 +72,5 @@ def start_producer(args, config, requests_queue):
     threading.Thread(target=lambda: producer_job(args, config, requests_queue)).start()
     
 if __name__ == '__main__':
-    start_producer(None, None, None)    
+    start_producer(None, None, None)
+    lps_data()   

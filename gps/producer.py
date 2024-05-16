@@ -3,10 +3,36 @@ import multiprocessing
 import threading
 from confluent_kafka import Producer
 import json
+import random
+import time
 
 _requests_queue: multiprocessing.Queue = None
 
-def proceed_to_deliver(id, details):
+def gps_data():
+    latitude = random.uniform(-90, 90)
+    longitude = random.uniform(-180, 180)
+    count = 1
+    while True:
+        if count % 3 == 0:
+            latitude += random.uniform(1, 10)
+            longitude += random.uniform(1, 10)
+        if count % 3 != 0:
+            latitude -= random.uniform(1, 10)
+            longitude -= random.uniform(1, 10)
+        time.time(5)
+        data = {
+            "deliver-to": "navigation",
+            "operation": "gps_location_data",
+            "data_location": {
+                "latitude": str(latitude) , 
+                "longitude": str(longitude)
+            }
+
+        }
+        proceed_to_deliver(data)
+    
+
+def proceed_to_deliver(details):
     # print(f"[debug] queueing for delivery event id: {id}, payload: {details}")    
     _requests_queue.put(details)
 
@@ -29,7 +55,7 @@ def producer_job(_, config, requests_queue: multiprocessing.Queue):
 
     while True:
         event_details = requests_queue.get()
-        event_details['source'] = 'lps'
+        event_details['source'] = 'gps'
         producer.produce(topic, json.dumps(event_details), event_details['id'],  
             callback=delivery_callback
         )
@@ -43,4 +69,5 @@ def start_producer(args, config, requests_queue):
     threading.Thread(target=lambda: producer_job(args, config, requests_queue)).start()
     
 if __name__ == '__main__':
-    start_producer(None, None, None)    
+    start_producer(None, None, None)
+    gps_data()
