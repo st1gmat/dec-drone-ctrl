@@ -156,7 +156,9 @@ _______
     "type":"что за данные",
     "deliver-from": "",
     "deliver-to": "",
-    "data": { .... }
+    "data": { 
+        
+    }
     },
 "component_to": "monitor"
 }
