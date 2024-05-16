@@ -3,11 +3,32 @@ from confluent_kafka import Consumer, OFFSET_BEGINNING
 import json
 from producer import proceed_to_deliver
 
+check_gps_data = False
+check_lps_data = False
 
 def handle_event(id, details):    
     # print(f"[debug] handling event {id}, {details}")
     print(f"[info] handling event {id}, {details['source']}->{details['deliver_to']}: {details['operation']}")
-    
+    try:
+        if details["source"] == "gps" or details["source"] == "lps":
+            print("Тут вычилсяется plane_data путем сравнения lps и gps \n Возвращается статус и какие-то данные...")
+            details["deliver-to"] = "flight_control"
+            details['operation'] = 'plane_data'
+            # В случае, если какие-то проблемы отправляется alert, но это негативный сценарий, мы его не рассматриваем
+            details['operation'] = 'plane_data'
+            if details["source"] == "gps":
+                details["plane_data"] = details["data_location"]
+                del details["data_location"]
+
+            if details["source"] == "lps":
+                details["plane_data"] = details["data_location"]
+                del details["data_location"]
+            
+            proceed_to_deliver(id, details)
+
+            
+    except Exception as e:
+        print(f"[error] failed to handle request: {e}")
 
 
 def consumer_job(args, config):
