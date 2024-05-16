@@ -32,7 +32,7 @@ def producer_job(_, config, requests_queue: multiprocessing.Queue):
 
     while True:
         event_details = requests_queue.get()
-        event_details['source'] = 'battery'
+        event_details['source'] = 'battery_control'
         producer.produce(topic, json.dumps(event_details), event_details['id'],  
             callback=delivery_callback
         )
@@ -50,7 +50,7 @@ def battery_status(value):
     details = {
         "id": req_id,
         "operation": "battery_status",
-        "new_data": str(value),
+        "status": str(value),
         "deliver_to": "technical_data"
     }
     proceed_to_deliver(req_id, details)
