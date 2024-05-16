@@ -2,7 +2,6 @@ from argparse import ArgumentParser, FileType
 from configparser import ConfigParser
 from multiprocessing import Queue
 from consumer import start_consumer
-from producer import start_producer
 
 if __name__ == '__main__':
     # Parse the command line.
@@ -16,8 +15,7 @@ if __name__ == '__main__':
     config_parser = ConfigParser()
     config_parser.read_file(args.config_file)
     config = dict(config_parser['default'])
-    config.update(config_parser['monitor'])
+    config.update(config_parser['emergency_landing'])
 
     requests_queue = Queue()
     start_consumer(args, config)
-    start_producer(args, config, requests_queue)    

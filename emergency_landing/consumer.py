@@ -6,7 +6,9 @@ import json
 def handle_event(id, details):    
     # print(f"[debug] handling event {id}, {details}")
     print(f"[info] handling event {id}, {details['source']}->{details['deliver_to']}: {details['operation']}")
-    
+    if details["source"] == "flight_control" and details["operation"] == "alert":
+        print("Аварийная посадка дрона....")
+        
 
 
 def consumer_job(args, config):
