@@ -60,61 +60,70 @@
 ### Компоненты*
 
 
-| Название | Назначение | Комментарий |
-|----|----|----|
+![alt text](images/image_2024-05-17_02-00-03.png)
 
 
 #### Монитор безопасности (security monitor)
+# Security Monitor Policies
+
+| Source             | Destination         | Operation             | Auth |
+|--------------------|---------------------|-----------------------|------|
+| connection         | data_processing     | data_processing       | True |
+| data_processing    | connection          | data_outputting       | True |
+| data_processing    | cooperation_tasks   | three_in_one          | True |
+| cooperation_tasks  | cooperation_plane   | plane_data            | True |
+| cooperation_tasks  | data_processing     | plane_data            | True |
+| cooperation_tasks  | data_processing     | detection_data        | True |
+| cooperation_tasks  | data_processing     | task_data             | True |
+| detector-control   | cooperation_tasks   | detection_data        | True |
+| cooperation_plane  | flight_control      | plane_data            | True |
+| cooperation_plane  | cooperation_tasks   | plane_data            | True |
+| flight_control     | emergency_landing   | alert                 | True |
+| flight_control     | motor_control       | movement_data         | True |
+| flight_control     | cooperation_tasks   | movement_data         | True |
+| motor_control      | technical_data      | motor_status          | True |
+| battery_control    | technical_data      | battery_status        | True |
+| technical_data     | flight_control      | tech_data             | True |
+| navigation         | flight_control      | location_data         | True |
+| lps                | navigation          | lps_location_data     | True |
+| gps                | navigation          | gps_location_data     | True |
 
 
 
 ### Алгоритм работы решения*
 
+Алгоритм решения представляет из себя базовый вариант реализации без технических деталей, вроде распределения заданий по приоритетам, просчета сетки координат и т.д. и т.п. Текущее решение представляет из себя реализацию компонентов и передачу между ними сообщения в соответсвии (или хотя бы приближенно, насколько возможно) с логикой базового сценарий и политикой архитектуры.
+
+Реализация в процессе...
 
 ### Описание cценариев (последовательности выполнения операций), при которых ЦБ нарушаются*
 
 
+
 #### Негативный сценарий 1.
 
+Нарушение ЦБ №2 Контроль батареи
+
+![alt text](images/image.png)
 
 #### Негативный сценарий 2. 
 
+Нарушение ЦБ № 3, 4 Контроль выполения задания
 
-#### Негативный сценарий 3.
-
-
-#### Сводная таблица негативных сценариев*
-
-|№  | Название | Скомпрометированная часть системы | Нарушенная цель безопасности |
-|----|----|----|----|
+![alt text](images/image-1.png)
 
 ### Политика архитектуры *
 
----
-**Важно!** Должна быть диаграмма, а не только текстовое описание.
-
----
+![alt text](images/image-3.png)
 
 #### Обоснование политики архитектуры *
 
-|ЦБ№  | ЦБ | Компонент | Уровень доверия | Обоснование |
-|----|----|----|----|----|
-
-
-### Политики безопасности*
-
+![alt text](images/image_2024-05-17_02-20-25.png)
 
 
 ## Запуск приложения и тестов*
 
----
-**Важно!** Отсутствие 
-- понятного описания ручного тестирования приложения 
-- автоматических тестов 
-
-для проверки функционала и негативных сценариев приведёт к существенному снижению оценки работы команды.
-
----
+В процессе...
 
 ### Запуск приложения*
 
@@ -122,15 +131,4 @@
 
 ### Запуск тестов*
 
-_Предполагается, что в ходе подготовки рабочего места все системные пакеты были установлены._
-
-Запуск примера: открыть окно терминала в Visual Studio code, в папке secure-update с исходным кодом выполнить 
-
-**make run**
-или **docker-compose up -d**
-
-Примечание: сервисам требуется некоторое время для начала обработки входящих сообщений от kafka, поэтому перед переходом к тестам следует сделать паузу 1-2 минуты
-
-запуск тестов:
-**make test**
-или **pytest**
+В процессе...
