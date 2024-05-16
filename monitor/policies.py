@@ -11,7 +11,7 @@ def check_operation(id, details):
 
     if src == 'connection' and dst == 'data_processing' \
         and operation == 'data_processing':
-        authorized = True
+        authorized = True # #####
     
     if src == 'data_processing' and dst == 'connection' \
         and operation == 'data_outputting':
@@ -19,23 +19,23 @@ def check_operation(id, details):
 
     if src == 'data_processing' and dst == 'cooperation_tasks' \
         and operation == 'three_in_one':
-        authorized = True
+        authorized = True # #####
 
     if src == 'cooperation_tasks' and dst == 'cooperation_plane' \
         and operation == 'plane_data':
-        authorized = True
+        authorized = True # #####
 
     if src == 'cooperation_tasks' and dst == 'data_processing' \
         and (operation == 'plane_data' or operation == 'detection_data' or operation == 'task_data'):
-        authorized = True
+        authorized = True #####
 
     if src == 'detector-control' and dst == 'cooperation_tasks' \
         and operation == 'detection_data':
         authorized = True
 
-    if src == 'cooperation_tasks' and dst == 'data_processing' \
-        and operation == 'detection_data':
-        authorized = True
+    # if src == 'cooperation_tasks' and dst == 'data_processing' \
+    #     and operation == 'detection_data':
+    #     authorized = True # ####
 
     if src == 'cooperation_plane' and dst == 'flight_control' \
         and operation == 'plane_data':
@@ -58,7 +58,7 @@ def check_operation(id, details):
         authorized = True
     
     if src == 'motor_control' and dst == 'technical_data' \
-        and operation == 'motor_data':
+        and operation == 'motor_status':
         authorized = True
 
     if src == 'battery_control' and dst == 'technical_data' \
@@ -66,7 +66,7 @@ def check_operation(id, details):
         authorized = True
 
     if src == 'technical_data' and dst == 'flight_control' \
-        and operation == 'data':
+        and operation == 'tech_data':
         authorized = True
 
     if src == 'navigation' and dst == 'flight_control' \
@@ -74,11 +74,11 @@ def check_operation(id, details):
         authorized = True 
 
     if src == 'lps' and dst == 'navigation' \
-        and operation == 'location_data':
+        and operation == 'lps_location_data':
         authorized = True 
     
     if src == 'gps' and dst == 'navigation' \
-        and operation == 'location_data':
+        and operation == 'gps_location_data':
         authorized = True 
 
     return authorized
