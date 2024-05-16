@@ -2,19 +2,33 @@ import threading
 from confluent_kafka import Consumer, OFFSET_BEGINNING
 import json
 from producer import proceed_to_deliver
-import services
 
 
 def handle_event(id, details):    
     # print(f"[debug] handling event {id}, {details}")
     print(f"[info] handling event {id}, {details['source']}->{details['deliver_to']}: {details['operation']}")
     if details['source'] == "battery":
-        if services.check_battery(details['new-data']):
-            # TODO: передать в управление полётом, что все ОК
-            pass
-        else:
-            # TODO: передать в управление полётом, что все плохо
-            pass
+        if details["source"] == "motor_control":
+            print("Проверка показателей от контроля двигателя/батареи, \nесли есть какая-то ошибка/несовпадение с нормой показателей, \nотправляется alert и происходит аварийная посадка")
+            details["deliver-to"] = "flight_control"
+            # details['operation'] = 'alert' # при негативном сценарии
+            details['operation'] = 'tech_data'
+
+            details["status"] = "stable_indicators"
+
+            proceed_to_deliver(id, details)
+
+        if details["source"] == "battery_control":
+            print("Проверка показателей от контроля двигателя/батареи, \nесли есть какая-то ошибка/несовпадение с нормой показателей, \nотправляется alert и происходит аварийная посадка")
+            details["deliver-to"] = "flight_control"
+            # details['operation'] = 'alert' # при негативном сценарии
+            details['operation'] = 'tech_data'
+
+            details["status"] = "stable_indicators"
+
+            proceed_to_deliver(id, details)
+
+
 
 
 
