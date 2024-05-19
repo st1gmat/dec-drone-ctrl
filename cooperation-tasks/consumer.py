@@ -3,28 +3,54 @@ from confluent_kafka import Consumer, OFFSET_BEGINNING
 import json
 from producer import proceed_to_deliver
 
-
+# glob_final_data = []
+final_data = {
+    "deliver_to": "data_processing",
+    "operation": "three_in_one",
+    "new-data": {
+        "task-data":"",
+        "detection-data":""
+    }
+}
 def handle_event(id, details):    
     # print(f"[debug] handling event {id}, {details}")
     print(f"[info] handling event {id}, {details['source']}->{details['deliver_to']}: {details['operation']}")
+    # global glob_final_data
+    global final_data
     try:
         if details["source"] == "data_processing":
-            print("Task checked and storaged => plane data sending to cooperation_plane")
-            details["deliver-to"] = "cooperation_plane"
+            print("Выбирается подзадание и полетное задание отправляется в coop_plane")
+            # if details["operation"] == "task_plane_data":
+            final_data["new-data"]["task-data"] = details["new-data"]["task-data"]
+            details["deliver_to"] = "cooperation_plane"
             details['operation'] = 'plane_data'
+            proceed_to_deliver(id, details)
+        
+        if details["source"] == "detector_control":
+            if details["operation"] == 'detection_data':
+                print("Данные об обнаружении человека")
+                final_data["id"] = details["id"]
+                final_data["new-data"]["detection-data"] = details["new-data"]
+                proceed_to_deliver(id, final_data)
 
-            proceed_to_deliver(id, details)
-        if details["source"] == "detector-control":
-            print("Data of detection => this data is sending to data_processing")
-            details["deliver-to"] = "data_processing"
-            details['operation'] = 'detection_data'
 
-            proceed_to_deliver(id, details)
-        if details["source"] == "cooperation_plane":
-            print("Data of coordinates => coordinates is sent to data_processing")
-            details["deliver-to"] = "data_processing"
-            details['operation'] = 'task_data'
-            proceed_to_deliver(id, details)
+            
+            
+            
+        
+        # if details["source"] == "detector-control":
+        #     print("Data of detection => this data is sending to data_processing")
+        #     details["deliver_to"] = "data_processing"
+        #     details['operation'] = 'detection_data'
+        #     # glob_final_data.append(details)
+        #     # proceed_to_deliver(id, details)
+        # if details["source"] == "cooperation_plane":
+        #     print("Data of coordinates => coordinates is sent to data_processing")
+        #     final_data["task-data"] = details["new_data"]["task-data"]
+        #     details["deliver_to"] = "data_processing"
+        #     details['operation'] = 'task_data'
+            # glob_final_data.append(details)
+            # proceed_to_deliver(id, details)
     except Exception as e:
         print(f"[error] failed to handle request: {e}")
 
