@@ -8,7 +8,7 @@ import threading
 load_dotenv()
 
 host_name = "0.0.0.0"
-port = os.getenv("GPS_API_PORT", default=5099)
+port = os.getenv("GPS_API_PORT", default=5023)
 
 app = Flask(__name__)             # create an app instance
 

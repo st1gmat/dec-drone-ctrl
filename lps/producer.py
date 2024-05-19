@@ -29,7 +29,7 @@ def lps_data():
                 "z": str(z),
             },
             
-            "deliver-to": "navigation",
+            "deliver_to": "navigation",
             "operation": "lps_location_data"
         }
         proceed_to_deliver(data)

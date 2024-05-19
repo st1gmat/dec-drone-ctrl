@@ -1,19 +1,20 @@
-# implements Kafka topic producer functionality
-
 import multiprocessing
 import threading
 from confluent_kafka import Producer
 import json
+import time
+import asyncio
 
 _requests_queue: multiprocessing.Queue = None
 
 def proceed_to_deliver(id, details):
-    # print(f"[debug] queueing for delivery event id: {id}, payload: {details}")
-    details['authorized'] = True
+    # print(f"[debug] queueing for delivery event id: {id}, payload: {details}")    
     _requests_queue.put(details)
 
 
 def producer_job(_, config, requests_queue: multiprocessing.Queue):
+    
+
     # Create Producer instance
     producer = Producer(config)
 
@@ -23,16 +24,14 @@ def producer_job(_, config, requests_queue: multiprocessing.Queue):
     def delivery_callback(err, msg):
         if err:
             print('[error] Message failed delivery: {}'.format(err))
-        # else:
-        #     print("[debug]Produced event to topic {topic}: key = {key:12} value = {value:12}".format(
-        #         topic=msg.topic(), key=msg.key().decode('utf-8'), value=msg.value().decode('utf-8')))
 
     # Produce data by selecting random values from these lists.
+    topic = "monitor"
 
     while True:
         event_details = requests_queue.get()
-        topic = event_details['deliver_to']
-        producer.produce(topic, json.dumps(event_details), event_details['id'],
+        event_details['source'] = 'detector'
+        producer.produce(topic, json.dumps(event_details), event_details['id'],  
             callback=delivery_callback
         )
         # Block until the messages are sent.

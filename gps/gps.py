@@ -16,7 +16,7 @@ if __name__ == "__main__":
     config_parser = ConfigParser()
     config_parser.read_file(args.config_file)
     config = dict(config_parser['default'])
-    config.update(config_parser['lps'])
+    config.update(config_parser['gps'])
 
     requests_queue = Queue()
 

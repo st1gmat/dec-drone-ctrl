@@ -8,7 +8,7 @@ import threading
 load_dotenv()
 
 host_name = "0.0.0.0"
-port = os.getenv("LPS_API_PORT", default=5006)
+port = os.getenv("LPS_API_PORT", default=5010)
 
 app = Flask(__name__)             # create an app instance
 

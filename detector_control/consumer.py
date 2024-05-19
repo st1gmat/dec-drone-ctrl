@@ -3,11 +3,26 @@ from confluent_kafka import Consumer, OFFSET_BEGINNING
 import json
 from producer import proceed_to_deliver
 
+detection_data = []
 
 def handle_event(id, details):    
     # print(f"[debug] handling event {id}, {details}")
+    global detection_data
     print(f"[info] handling event {id}, {details['source']}->{details['deliver_to']}: {details['operation']}")
-    
+    if details["source"] == "detector":
+        if details["operation"] == "detection":
+            print("Запрос данных к coop_plane")
+            detection_data.append(details)
+            details["deliver_to"] = "cooperation_plane"
+            details["operation"] = "req_plane_data"
+            proceed_to_deliver(id, details)
+    if details["source"] == "cooperation_plane":
+        if details["operation"] == "plane_data":
+            print("Данные от coop_plane")
+            details["deliver_to"] = "cooperation-tasks"
+            details["operation"] = "detection_data"
+            proceed_to_deliver(id, details)
+            
 
 
 def consumer_job(args, config):

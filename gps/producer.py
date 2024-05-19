@@ -21,7 +21,7 @@ def gps_data():
             longitude -= random.uniform(1, 10)
         time.time(5)
         data = {
-            "deliver-to": "navigation",
+            "deliver_to": "navigation",
             "operation": "gps_location_data",
             "data_location": {
                 "latitude": str(latitude) , 

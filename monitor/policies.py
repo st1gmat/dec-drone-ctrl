@@ -33,9 +33,9 @@ def check_operation(id, details):
         and operation == "three_in_one":
         authorized = True #####
 
-    if src == 'detector_control' and dst == 'cooperation-tasks' \
-        and operation == 'detection_data':
-        authorized = True
+    # if src == 'detector_control' and dst == 'cooperation-tasks' \
+    #     and operation == 'detection_data':
+    #     authorized = True
 
     # if src == 'cooperation-tasks' and dst == 'data_processing' \
     #     and operation == 'detection_data':

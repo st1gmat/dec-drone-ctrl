@@ -8,9 +8,9 @@ def handle_event(id, details):
     # print(f"[debug] handling event {id}, {details}")
     print(f"[info] handling event {id}, {details['source']}->{details['deliver_to']}: {details['operation']}")
     try:
-        # if details['source'] == "data_processing" and details['operation'] == "data_outputting":
-        #     print("Результат выполнения задания...")
-        print(details)       
+        if details['source'] == "data_processing" and details['operation'] == "task_confirm":
+            print("Результат выполнения задания...")
+            print(details)
     except Exception as e:
         print(f"[error] failed to handle request: {e}")
 
