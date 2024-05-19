@@ -8,7 +8,7 @@ def check_operation(id, details):
     src = details['source']
     dst = details['deliver_to']
     operation = details['operation']
-
+    authorized = False
     if src == 'connection' and dst == 'data_processing' \
         and operation == 'data_processing':
         authorized = True # #####
@@ -16,24 +16,28 @@ def check_operation(id, details):
     if src == 'data_processing' and dst == 'connection' \
         and operation == 'data_outputting':
         authorized = True
+    
+    if src == 'data_processing' and dst == 'connection' \
+        and operation == 'task_confirm':
+        authorized = True
 
-    if src == 'data_processing' and dst == 'cooperation_tasks' \
-        and operation == 'three_in_one':
+    if src == 'data_processing' and dst == 'cooperation-tasks' \
+        and operation == 'task_plane_data':
         authorized = True # #####
 
-    if src == 'cooperation_tasks' and dst == 'cooperation_plane' \
+    if src == 'cooperation-tasks' and dst == 'cooperation_plane' \
         and operation == 'plane_data':
         authorized = True # #####
 
-    if src == 'cooperation_tasks' and dst == 'data_processing' \
-        and (operation == 'plane_data' or operation == 'detection_data' or operation == 'task_data'):
+    if src == 'cooperation-tasks' and dst == 'data_processing' \
+        and operation == "three_in_one":
         authorized = True #####
 
-    if src == 'detector-control' and dst == 'cooperation_tasks' \
+    if src == 'detector_control' and dst == 'cooperation-tasks' \
         and operation == 'detection_data':
         authorized = True
 
-    # if src == 'cooperation_tasks' and dst == 'data_processing' \
+    # if src == 'cooperation-tasks' and dst == 'data_processing' \
     #     and operation == 'detection_data':
     #     authorized = True # ####
 
@@ -41,7 +45,7 @@ def check_operation(id, details):
         and operation == 'plane_data':
         authorized = True
 
-    if src == 'cooperation_plane' and dst == 'cooperation_tasks' \
+    if src == 'cooperation_plane' and dst == 'cooperation-tasks' \
         and operation == 'plane_data':
         authorized = True
     
@@ -53,9 +57,9 @@ def check_operation(id, details):
         and operation == 'movement_data':
         authorized = True
 
-    if src == 'flight_control' and dst == 'cooperation_tasks' \
-        and operation == 'movement_data':
-        authorized = True
+    # if src == 'flight_control' and dst == 'cooperation-tasks' \
+    #     and operation == 'movement_data':
+    #     authorized = True
     
     if src == 'motor_control' and dst == 'technical_data' \
         and operation == 'motor_status':
@@ -69,6 +73,10 @@ def check_operation(id, details):
         and operation == 'tech_data':
         authorized = True
 
+    if src == 'flight_control' and dst == 'cooperation_plane' \
+        and operation == 'plane_status':
+        authorized = True
+
     if src == 'navigation' and dst == 'flight_control' \
         and operation == 'location_data':
         authorized = True 
@@ -80,7 +88,27 @@ def check_operation(id, details):
     if src == 'gps' and dst == 'navigation' \
         and operation == 'gps_location_data':
         authorized = True 
+    
+    if src == 'detector' and dst == 'detector_control' \
+        and operation == 'detection':
+        authorized = True 
 
+    if src == 'detector_control' and dst == 'cooperation_plane' \
+        and operation == 'req_plane_data':
+        authorized = True 
+    
+    if src == 'cooperation_plane' and dst == 'detector_control' \
+        and operation == 'plane_data':
+        authorized = True 
+
+    if src == 'detector_control' and dst == 'cooperation-tasks' \
+        and operation == 'detection_data':
+        authorized = True
+    
+    if src == 'detector_control' and dst == 'cooperation-tasks' \
+        and operation == 'detection_data':
+        authorized = True 
+    
     return authorized
 
 
