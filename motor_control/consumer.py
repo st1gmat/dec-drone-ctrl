@@ -8,9 +8,13 @@ def handle_event(id, details):
     # print(f"[debug] handling event {id}, {details}")
     print(f"[info] handling event {id}, {details['source']}->{details['deliver_to']}: {details['operation']}")
     if details["source"] == "flight_control":
-        if details["operation"] == 'movement_data':
-            print("Обработка movement_data от flight_control => запуск двигателей и дальнейший полет куда надо...")
-            # статус мотора передается в потоке в producer
+        print("Обработка movement_data от flight_control => запуск двигателей и дальнейший полет куда надо...")
+
+        if details["operation"] == "movement_data":
+            details["deliver_to"] = "technical_data"
+            details['operation'] = 'motor_status'
+            details["new-data"]["motor-status"] = "OK"
+            proceed_to_deliver(id, details)
             
 
 

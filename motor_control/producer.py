@@ -55,18 +55,18 @@ def start_producer(args, config, requests_queue):
 #     }
 #     proceed_to_deliver(req_id, details)
 
-def motor_status_simulation():
-    while True:
-        time.sleep(10)
-        # check = True
-        # if check:
-        data = {
-            "deliver-to": "technical_data",
-            "operation": "motor_status",
-            "status": "OK" 
-        }
+# def motor_status_simulation():
+#     while True:
+#         time.sleep(10)
+#         # check = True
+#         # if check:
+#         data = {
+#             "deliver_to": "technical_data",
+#             "operation": "motor_status",
+#             "status": "OK" 
+#         }
     
 
 if __name__ == '__main__':
     start_producer(None, None, None)
-    motor_status_simulation()
+    # motor_status_simulation()
