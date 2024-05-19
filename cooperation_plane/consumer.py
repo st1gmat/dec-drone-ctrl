@@ -3,22 +3,40 @@ from confluent_kafka import Consumer, OFFSET_BEGINNING
 import json
 from producer import proceed_to_deliver
 
+plain_data = {}
 
 def handle_event(id, details):    
     # print(f"[debug] handling event {id}, {details}")
     print(f"[info] handling event {id}, {details['source']}->{details['deliver_to']}: {details['operation']}")
+    global plain_data
     try:
-        if details["source"] == "cooperation_tasks":
+        if details["source"] == "cooperation-tasks":
             print("task-data + plane-data => sending to flight_control")
-            details["deliver-to"] = "flight_control"
+            details["deliver_to"] = "flight_control"
             details['operation'] = 'plane_data'
             proceed_to_deliver(id, details)
         
+            
+            
+
         if details["source"] == "flight_control":
-            print("Processing of movement data to plane data => sending to cooperation tasks")
-            details["deliver-to"] = "cooperation_tasks"
-            details['operation'] = 'plane_data'
-            proceed_to_deliver(id, details)
+            if details["operation"] == "plane_status":
+                print("Статус, данные о полете")
+                plain_data = details
+            # print("Processing of movement data to plane data => sending to cooperation tasks")
+            # details["deliver_to"] = "cooperation_tasks"
+            # details['operation'] = 'plane_data'
+            # proceed_to_deliver(id, details)
+        
+        if details["source"] == "detector_control":
+            if details["operation"] == "req_plane_data":
+                details["new-data"]["location"] = plain_data["new-data"]["plane-data"]
+                details["deliver_to"] = "detector_control"
+                details["operation"] = "plane_data"
+                proceed_to_deliver(id, details)
+
+
+        
        
     except Exception as e:
         print(f"[error] failed to handle request: {e}")
