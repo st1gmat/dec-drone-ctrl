@@ -16,7 +16,7 @@ if __name__ == '__main__':
     config_parser = ConfigParser()
     config_parser.read_file(args.config_file)
     config = dict(config_parser['default'])
-    config.update(config_parser['monitor'])
+    config.update(config_parser['flight_control'])
 
     requests_queue = Queue()
     start_consumer(args, config)
