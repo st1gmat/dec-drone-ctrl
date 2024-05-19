@@ -37,7 +37,7 @@ def processing_received(new_data: bytes, details: dict):
     # decrypted_data = decrypt_data(new_data['encrypted-data'], drone_key)
     decrypted_data = new_data
     # print("********")
-    if str(drone_id) in decrypted_data["deliver-to"] or decrypted_data["deliver-to"] == "all":
+    if decrypted_data["deliver_to"] or decrypted_data["deliver_to"] == "all":
         type = decrypted_data['type']
         if type == "plane_data":
             details["operation"] = "plane_tasks"
@@ -58,29 +58,28 @@ def processing_departure(new_data: dict, details: dict):
 def handle_event(id :str, details: dict):    
     # print(f"[debug] handling event {id}, {details}")
     print(f"[info] handling event {id}, {details['source']}->{details['deliver_to']}: {details['operation']}")
-    
-    # TODO: сделать остальные компоненты, а то в никуда передается по сути
+
     try:
-        if details['operation'] == 'data_processing':
-            new_data = details['new_data']
-            if details['source'] == "cooperation_tasks":
-                new_data = processing_departure(new_data)
-                details['new_data'] = new_data
-                details['operation'] = 'data_outputting'
-                details['deliver_to'] = 'connection'
+
+        if details["source"] == "connection":
+            if details["operation"] == "data_processing":
+                print("Дешифровка данных о задании + отправка их в coop_tasks ")
+                details["deliver_to"] = "cooperation-tasks"
+                details["operation"] = "task_plane_data"
                 proceed_to_deliver(id, details)
 
-                
-            if details['source'] == "connection":
-                # new_data = processing_received(new_data, details)
-                
-                details['new_data'] = new_data
-                details['deliver_to'] = 'cooperation_tasks'
-                details['operation'] = 'task_data'
-
-                # print('details["deliver_from"] == "connection"\n' + details)
-                print("[debug_flag] ended processing_received \n going to deliver")
+        if details["source"] == "cooperation-tasks":
+            if details['operation'] == "three_in_one":
+                print("Шифровка рузультирующих данных + отправка их в connection ")
+                details['deliver_to'] = "connection"
+                details['operation'] = "task_confirm"
                 proceed_to_deliver(id, details)
+        
+
+
+
+
+
     except Exception as e:
         print(f"[error] failed to handle request: {e}")
 
