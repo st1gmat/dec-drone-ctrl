@@ -7,26 +7,25 @@ from producer import proceed_to_deliver
 def handle_event(id, details):    
     # print(f"[debug] handling event {id}, {details}")
     print(f"[info] handling event {id}, {details['source']}->{details['deliver_to']}: {details['operation']}")
-    if details['source'] == "battery":
-        if details["source"] == "motor_control":
+    if details["source"] == "motor_control":
+        if details["operation"] == "motor_status":
             print("Проверка показателей от контроля двигателя/батареи, \nесли есть какая-то ошибка/несовпадение с нормой показателей, \nотправляется alert и происходит аварийная посадка")
-            details["deliver-to"] = "flight_control"
+            details["deliver_to"] = "flight_control"
             # details['operation'] = 'alert' # при негативном сценарии
             details['operation'] = 'tech_data'
-
-            details["status"] = "stable_indicators"
-
+            del details["new-data"]["motor-status"]
+            details["new-data"]["summary_status"] = "stable_indicators"
             proceed_to_deliver(id, details)
 
-        if details["source"] == "battery_control":
-            print("Проверка показателей от контроля двигателя/батареи, \nесли есть какая-то ошибка/несовпадение с нормой показателей, \nотправляется alert и происходит аварийная посадка")
-            details["deliver-to"] = "flight_control"
-            # details['operation'] = 'alert' # при негативном сценарии
-            details['operation'] = 'tech_data'
+    if details["source"] == "battery_control":
+        print("Проверка показателей от контроля двигателя/батареи, \nесли есть какая-то ошибка/несовпадение с нормой показателей, \nотправляется alert и происходит аварийная посадка")
+        details["deliver_to"] = "flight_control"
+        # details['operation'] = 'alert' # при негативном сценарии
+        details['operation'] = 'tech_data'
 
-            details["status"] = "stable_indicators"
+        details["status"] = "stable_indicators"
 
-            proceed_to_deliver(id, details)
+        # proceed_to_deliver(id, details)
 
 
 
