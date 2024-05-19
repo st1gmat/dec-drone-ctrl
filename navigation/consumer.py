@@ -12,7 +12,7 @@ def handle_event(id, details):
     try:
         if details["source"] == "gps" or details["source"] == "lps":
             print("Тут вычилсяется plane_data путем сравнения lps и gps \n Возвращается статус и какие-то данные...")
-            details["deliver-to"] = "flight_control"
+            details["deliver_to"] = "flight_control"
             details['operation'] = 'plane_data'
             # В случае, если какие-то проблемы отправляется alert, но это негативный сценарий, мы его не рассматриваем
             details['operation'] = 'plane_data'
