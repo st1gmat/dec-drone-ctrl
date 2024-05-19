@@ -9,7 +9,7 @@ import base64
 load_dotenv()
 
 host_name = "0.0.0.0"
-port = os.getenv("CONNECTION_API_PORT", default=5005)
+port = os.getenv("CONNECTION_API_PORT", default=5056)
 
 app = Flask(__name__)             # create an app instance
 
@@ -31,7 +31,7 @@ def data_ingest():
         update_details = {
             "id": req_id,
             "operation": "data_processing",
-            "new_data": content,
+            "new-data": content,
             "deliver_to": "data_processing"
         }
         _requests_queue.put(update_details)
