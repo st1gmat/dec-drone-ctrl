@@ -26,35 +26,134 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
-  # connection:
-  #   image: connection
-  #   build:
-  #     context: .
-  #     dockerfile: connection/Dockerfile.connection
-  #   depends_on:
-  #     - su-broker
-  #   environment:
-  #     - CONNECTION_API_PORT=6000
-  #   ports:
-  #     - "6000:6000"
+  connection:
+    image: connection
+    build:
+      context: .
+      dockerfile: connection/Dockerfile.connection
+    depends_on:
+      - su-broker
+    environment:
+      - CONNECTION_API_PORT=6000
+    ports:
+      - "6000:6000"
   
-  # lps:
-  #   image: lps
-  #   build:
-  #     context: .
-  #     dockerfile: lps/Dockerfile.lps
-  #   depends_on:
-  #     - su-broker
-  #   environment:
-  #     - LPS_API_PORT=6001
-  #   ports:
-  #     - "6001:6001"
+  lps:
+    image: lps
+    build:
+      context: .
+      dockerfile: lps/Dockerfile.lps
+    depends_on:
+      - su-broker
+    environment:
+      - LPS_API_PORT=6001
+    ports:
+      - "6001:6001"
 
-  # monitor:
-  #   image: monitor
-  #   build:
-  #     context: .
-  #     dockerfile: monitor/Dockerfile.monitor
-  #   depends_on:
-  #     - su-broker
+  gps:
+    image: gps
+    build:
+      context: .
+      dockerfile: gps/Dockerfile.gps
+    depends_on:
+      - su-broker
+    environment:
+      - LPS_API_PORT=6002
+    ports:
+      - "6002:6002"
 
+  monitor:
+    image: monitor
+    build:
+      context: .
+      dockerfile: monitor/Dockerfile.monitor
+    depends_on:
+      - su-broker
+
+  detector:
+    image: detector
+    build:
+      context: .
+      dockerfile: detector/Dockerfile.detector
+    depends_on:
+      - su-broker
+  
+  detector-control:
+    image: detector-control
+    build:
+      context: .
+      dockerfile: detector-control/Dockerfile.detector-control
+    depends_on:
+      - su-broker
+
+  emergency_landing:
+    image: emergency_landing
+    build:
+      context: .
+      dockerfile: emergency_landing/Dockerfile.emergency_landing
+    depends_on:
+      - su-broker
+
+  flight_control:
+    image: flight_control
+    build:
+      context: .
+      dockerfile: flight_control/Dockerfile.flight_control
+    depends_on:
+      - su-broker
+
+  battery_control:
+    image: battery_control
+    build:
+      context: .
+      dockerfile: battery_control/Dockerfile.battery_control
+    depends_on:
+      - su-broker
+
+  cooperation_plane:
+    image: cooperation_plane
+    build:
+      context: .
+      dockerfile: cooperation_plane/Dockerfile.cooperation_plane
+    depends_on:
+      - su-broker
+  
+  cooperation-tasks:
+    image: cooperation-tasks
+    build:
+      context: .
+      dockerfile: cooperation-tasks/Dockerfile.cooperation-tasks
+    depends_on:
+      - su-broker
+  
+  data_processing:
+    image: data_processing
+    build:
+      context: .
+      dockerfile: data_processing/Dockerfile.data_processing
+    depends_on:
+      - su-broker
+
+  motor_control:
+    image: motor_control
+    build:
+      context: .
+      dockerfile: motor_control/Dockerfile.motor_control
+    depends_on:
+      - su-broker
+
+  navigation:
+    image: navigation
+    build:
+      context: .
+      dockerfile: navigation/Dockerfile.navigation
+    depends_on:
+      - su-broker
+
+  technical_data:
+    image: technical_data
+    build:
+      context: .
+      dockerfile: technical_data/Dockerfile.technical_data
+    depends_on:
+      - su-broker
