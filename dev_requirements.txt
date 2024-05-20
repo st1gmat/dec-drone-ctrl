@@ -1,0 +1,5 @@
+confluent-kafka
+configparser
+flask
+python-dotenv
+pytest
