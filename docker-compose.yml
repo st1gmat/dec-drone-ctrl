@@ -78,11 +78,11 @@ services:
     depends_on:
       - su-broker
   
-  detector-control:
-    image: detector-control
+  detector_control:
+    image: detector_control
     build:
       context: .
-      dockerfile: detector-control/Dockerfile.detector-control
+      dockerfile: detector_control/Dockerfile.detector_control
     depends_on:
       - su-broker
 
