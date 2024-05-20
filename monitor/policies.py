@@ -42,7 +42,7 @@ def check_operation(id, details):
     #     authorized = True # ####
 
     if src == 'cooperation_plane' and dst == 'flight_control' \
-        and operation == 'plane_data':
+        and operation == 'loc_data':
         authorized = True
 
     if src == 'cooperation_plane' and dst == 'cooperation-tasks' \
@@ -94,11 +94,11 @@ def check_operation(id, details):
         authorized = True 
 
     if src == 'detector_control' and dst == 'cooperation_plane' \
-        and operation == 'req_plane_data':
+        and operation == 'req_loc_data':
         authorized = True 
     
     if src == 'cooperation_plane' and dst == 'detector_control' \
-        and operation == 'plane_data':
+        and operation == 'loc_data':
         authorized = True 
 
     if src == 'detector_control' and dst == 'cooperation-tasks' \

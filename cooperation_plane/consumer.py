@@ -22,17 +22,17 @@ def handle_event(id, details):
         if details["source"] == "flight_control":
             if details["operation"] == "plane_status":
                 print("Статус, данные о полете")
-                plain_data = details
+                plain_data = details["new-data"]
             # print("Processing of movement data to plane data => sending to cooperation tasks")
             # details["deliver_to"] = "cooperation_tasks"
             # details['operation'] = 'plane_data'
             # proceed_to_deliver(id, details)
         
         if details["source"] == "detector_control":
-            if details["operation"] == "req_plane_data":
-                details["new-data"]["location"] = plain_data["new-data"]["plane-data"]
+            if details["operation"] == "req_loc_data":
+                details["new-data"]["location"] = plain_data
                 details["deliver_to"] = "detector_control"
-                details["operation"] = "plane_data"
+                details["operation"] = "loc_data"
                 proceed_to_deliver(id, details)
 
 

@@ -14,10 +14,10 @@ def handle_event(id, details):
             print("Запрос данных к coop_plane")
             detection_data.append(details)
             details["deliver_to"] = "cooperation_plane"
-            details["operation"] = "req_plane_data"
+            details["operation"] = "req_loc_data"
             proceed_to_deliver(id, details)
     if details["source"] == "cooperation_plane":
-        if details["operation"] == "plane_data":
+        if details["operation"] == "loc_data":
             print("Данные от coop_plane")
             details["deliver_to"] = "cooperation-tasks"
             details["operation"] = "detection_data"
